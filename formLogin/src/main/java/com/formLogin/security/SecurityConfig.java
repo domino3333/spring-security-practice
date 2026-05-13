@@ -21,6 +21,9 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                 )
+                .authorizeHttpRequests(auth->auth
+                        .requestMatchers("/login","/loginProc").permitAll()
+                )
                 .csrf(csrf->csrf.disable())
                 .build();
 
