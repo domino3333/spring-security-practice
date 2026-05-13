@@ -7,6 +7,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static jakarta.servlet.DispatcherType.ERROR;
+import static jakarta.servlet.DispatcherType.FORWARD;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -20,9 +22,13 @@ public class SecurityConfig {
                 .formLogin(fr -> fr
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
+                        .defaultSuccessUrl("/main",false)
                 )
                 .authorizeHttpRequests(auth->auth
+                        .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers("/login","/loginProc").permitAll()
+                        .requestMatchers("/main").permitAll()
+
                 )
                 .csrf(csrf->csrf.disable())
                 .build();
