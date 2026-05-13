@@ -3,5 +3,8 @@
 <mapper namespace="com.formLogin.mapper.MemberMapper">
 
 
+    <select id="readMemberById" resultType="Member">
+        select * from member where id = #{id}
+    </select>
 
 </mapper>

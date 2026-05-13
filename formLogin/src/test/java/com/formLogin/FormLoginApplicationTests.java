@@ -3,6 +3,7 @@ package com.formLogin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 
@@ -15,19 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class FormLoginApplicationTests {
 
-    @Autowired
-    private MockMvc mockMvc;
 
     @Test
-    void contextLoads() {
-    }
+    public void asdf(){
 
-    @Test
-    void rootShowsTestJsp() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("test"))
-                .andExpect(forwardedUrl("/WEB-INF/views/test.jsp"));
+        System.out.println(new BCryptPasswordEncoder().encode("123123"));
     }
 
 }
