@@ -6,10 +6,13 @@ import com.formLogin.domain.MemberRole;
 import com.formLogin.mapper.MemberMapper;
 import com.formLogin.mapper.MemberRoleMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,21 +33,22 @@ public class MyUserDetailsService implements UserDetailsService {
         List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
 
         if(member == null){
-            //던지면 authenticationProvider가 받게 됨   
+            //던지면 authenticationProvider가 받게 됨
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
         List<MemberRole> memberRoleList = memberRoleMapper.readMemberRoleById(id);
 
+        UsernamePasswordAuthenticationFilter ff =null;
+
         for (MemberRole item : memberRoleList) {
             simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + item.getRoleName()));
 
-
-            return MyUser.builder()
-                    .member(member)
-                    .name(member.getName())
-                    .id(member.getId())
-                    .roles(simpleGrantedAuthorityList)
-                    .password(member.getPassword()).build();
-
         }
+        return MyUser.builder()
+                .member(member)
+                .name(member.getName())
+                .id(member.getId())
+                .roles(simpleGrantedAuthorityList)
+                .password(member.getPassword()).build();
     }
+}
