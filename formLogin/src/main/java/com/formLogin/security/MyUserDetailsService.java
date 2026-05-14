@@ -32,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
         try {
             member = memberMapper.readMemberById(id);
-            memberRoleList.add(memberRoleMapper.readMemberRoleById(id));
+            memberRoleList = memberRoleMapper.readMemberRoleById(id);
 
             for(MemberRole item : memberRoleList){
                 simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_"+item.getRoleName()));
