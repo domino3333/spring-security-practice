@@ -19,13 +19,19 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
+        Member member = null;
         try {
-            Member member = memberMapper.readMemberById(id);
+            member = memberMapper.readMemberById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        return null;
+        return MyUser.builder()
+                .member(member)
+                .name(member.getName())
+                .id(member.getId())
+                .password(member.getPassword()).build();
+
     }
 }

@@ -2,6 +2,7 @@ package com.formLogin.security;
 
 
 import com.formLogin.domain.Member;
+import lombok.Builder;
 import lombok.Data;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
+@Builder
 public class MyUser implements UserDetails {
 
     private Member member;
