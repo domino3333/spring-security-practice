@@ -2,17 +2,12 @@ package com.formLogin.security;
 
 
 import com.formLogin.domain.Member;
-import com.formLogin.domain.MemberRole;
 import lombok.Builder;
 import lombok.Data;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Data
