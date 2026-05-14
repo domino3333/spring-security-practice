@@ -1,10 +1,13 @@
 package com.formLogin.security;
 
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static jakarta.servlet.DispatcherType.ERROR;
@@ -22,16 +25,22 @@ public class SecurityConfig {
                 .formLogin(fr -> fr
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/main",false)
+                        .defaultSuccessUrl("/main", true)
                 )
-                .authorizeHttpRequests(auth->auth
+                .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
-                        .requestMatchers("/login","/loginProc").permitAll()
+                        .requestMatchers("/login", "/loginProc").permitAll()
                         .requestMatchers("/main").permitAll()
 
                 )
-                .csrf(csrf->csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .build();
 
+    }
+
+
+    @Bean
+    BCryptPasswordEncoder createPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
