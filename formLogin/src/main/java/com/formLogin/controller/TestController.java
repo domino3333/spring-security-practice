@@ -1,6 +1,8 @@
 package com.formLogin.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +19,13 @@ public class TestController {
     }
 
     @GetMapping("/main")
-    public String mainPage(){
+    public String mainPage(HttpSession session, Authentication authentication){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("main에서의 name:{}",name);
+        session.setAttribute("main용","무엇이있을까요");
+        log.info("main에서의 authentication.getPricipal:{}",authentication.getPrincipal());
+        log.info("what is this:{}",session.getAttribute("SPRING_SECURITY_CONTEXT"));
+
 
 
         return "main";
