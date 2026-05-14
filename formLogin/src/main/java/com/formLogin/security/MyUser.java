@@ -1,9 +1,11 @@
 package com.formLogin.security;
 
 
+import com.formLogin.domain.Member;
 import lombok.Data;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -11,6 +13,20 @@ import java.util.List;
 
 @Data
 public class MyUser implements UserDetails {
+
+    private Member member;
+    private Long memberNo;
+    private String id;
+    private String password;
+    private String name;
+
+    public MyUser(Member member,Long memberNo, String id, String password, String name) {
+        this.member = member;
+        this.memberNo = memberNo;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+    }
 
 
     @Override
