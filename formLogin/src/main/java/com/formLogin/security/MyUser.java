@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -19,19 +20,20 @@ public class MyUser implements UserDetails {
     private String id;
     private String password;
     private String name;
-    private List<? extends GrantedAuthority> roles;
+    private List<SimpleGrantedAuthority> roles;
 
-    public MyUser(Member member,Long memberNo, String id, String password, String name) {
+    public MyUser(Member member, Long memberNo, String id, String password, String name, List<SimpleGrantedAuthority> roles) {
         this.member = member;
         this.memberNo = memberNo;
         this.id = id;
         this.password = password;
         this.name = name;
+        this.roles = roles;
     }
 
 
     @Override
-    public List<? extends GrantedAuthority> getAuthorities() {
+    public List<SimpleGrantedAuthority> getAuthorities() {
         return this.roles;
     }
 

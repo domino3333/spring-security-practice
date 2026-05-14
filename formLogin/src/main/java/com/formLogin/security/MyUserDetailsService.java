@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
-        Member member = member = memberMapper.readMemberById(id);
+        Member member = memberMapper.readMemberById(id);
         List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
 
         if(member == null){
