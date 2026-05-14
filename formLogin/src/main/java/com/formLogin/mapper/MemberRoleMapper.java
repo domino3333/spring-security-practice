@@ -11,5 +11,5 @@ import java.util.List;
 public interface MemberRoleMapper {
 
 
-    List<MemberRole> readMemberRoleById(String id) throws Exception;
+    List<MemberRole> readMemberRoleById(String id);
 }

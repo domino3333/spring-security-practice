@@ -26,32 +26,25 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
-        Member member = null;
-        List<MemberRole> memberRoleList = new ArrayList<>();
+        Member member = member = memberMapper.readMemberById(id);
         List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
 
-        try {
-            member = memberMapper.readMemberById(id);
-            memberRoleList = memberRoleMapper.readMemberRoleById(id);
-
-            for(MemberRole item : memberRoleList){
-                simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_"+item.getRoleName()));
-            }
-
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(member == null){
+            //던지면 authenticationProvider가 받게 됨   
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
+        List<MemberRole> memberRoleList = memberRoleMapper.readMemberRoleById(id);
+
+        for (MemberRole item : memberRoleList) {
+            simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + item.getRoleName()));
 
 
-        return MyUser.builder()
-                .member(member)
-                .name(member.getName())
-                .id(member.getId())
-                .roles(simpleGrantedAuthorityList)
-                .password(member.getPassword()).build();
+            return MyUser.builder()
+                    .member(member)
+                    .name(member.getName())
+                    .id(member.getId())
+                    .roles(simpleGrantedAuthorityList)
+                    .password(member.getPassword()).build();
 
+        }
     }
-}

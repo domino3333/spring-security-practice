@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface MemberMapper {
 
 
-    Member readMemberById(String id) throws Exception;
+    Member readMemberById(String id);
 }
