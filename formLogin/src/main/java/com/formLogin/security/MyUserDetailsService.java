@@ -38,8 +38,6 @@ public class MyUserDetailsService implements UserDetailsService {
         }
         List<MemberRole> memberRoleList = memberRoleMapper.readMemberRoleById(id);
 
-        UsernamePasswordAuthenticationFilter ff =null;
-
         for (MemberRole item : memberRoleList) {
             simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + item.getRoleName()));
 
