@@ -39,6 +39,7 @@ public class MyUserDetailsService implements UserDetailsService {
         List<MemberRole> memberRoleList = memberRoleMapper.readMemberRoleById(id);
 
         for (MemberRole item : memberRoleList) {
+            //저장할 땐 ROLE_를 붙여서 UserDetails 구현체로 넣기
             simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + item.getRoleName()));
 
         }
