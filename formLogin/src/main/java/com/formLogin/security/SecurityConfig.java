@@ -28,6 +28,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/main", true)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers("/login", "/loginProc").permitAll()
                         .requestMatchers("/main").permitAll()
 
