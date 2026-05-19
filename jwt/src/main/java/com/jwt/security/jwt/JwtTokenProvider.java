@@ -55,11 +55,6 @@ public class JwtTokenProvider {
     }
 
 
-
-
-
-
-
     public String createToken(Authentication authentication){
         String id = authentication.getName();
 
