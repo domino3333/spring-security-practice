@@ -38,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String id = jwtTokenProvider.getId(token);
                 MyUser myUser = (MyUser) myUserDetailsService.loadUserByUsername(id);
 
+                //로그인 요청 때는 인증 객체를 내가 직접 꽂아 넣어야 함
                 UsernamePasswordAuthenticationToken authenticationToken
                         = new UsernamePasswordAuthenticationToken(myUser,null,myUser.getAuthorities());
 
