@@ -2,6 +2,7 @@ package com.jwt.controller;
 
 
 import com.jwt.dto.LoginDto;
+import com.jwt.dto.LoginResponse;
 import com.jwt.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,6 @@ public class AuthController {
 
 
 
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new LoginResponse(jwt));
     }
 }
