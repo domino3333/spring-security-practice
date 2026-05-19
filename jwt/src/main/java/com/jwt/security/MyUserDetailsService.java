@@ -20,6 +20,9 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
         Member member = memberMapper.readMemberById(id);
+        if (member == null) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
         List<MemberRole> roleList = memberRoleMapper.readMemberRoleById(id);
         List<GrantedAuthority> authorities = new ArrayList<>();
 
