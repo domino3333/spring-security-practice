@@ -22,6 +22,7 @@ public class AuthController {
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody LoginDto dto) {
 
+        //로그인요청 때는 id/pw를 token으로 만듦
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(dto.getId(),dto.getPassword());
 
         //인증 성공 시 authentication으로 돌려받고 이걸로 토큰을 만드는 것
