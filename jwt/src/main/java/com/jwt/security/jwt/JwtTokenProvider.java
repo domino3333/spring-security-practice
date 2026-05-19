@@ -1,6 +1,7 @@
 package com.jwt.security.jwt;
 
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,6 +31,26 @@ public class JwtTokenProvider {
         this.expiration = expiration;
 
     }
+
+    public boolean validateToken(String token){
+        try{
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+
+            return true;
+        }catch(JwtException | IllegalArgumentException e){
+            return false;
+        }
+    }
+
+
+
+
+
+
+
 
     public String createToken(Authentication authentication){
         String id = authentication.getName();
