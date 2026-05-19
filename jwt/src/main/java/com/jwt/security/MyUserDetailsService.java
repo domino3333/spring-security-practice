@@ -23,6 +23,7 @@ public class MyUserDetailsService implements UserDetailsService {
         if (member == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
+        
         List<MemberRole> roleList = memberRoleMapper.readMemberRoleById(id);
         List<GrantedAuthority> authorities = new ArrayList<>();
 
