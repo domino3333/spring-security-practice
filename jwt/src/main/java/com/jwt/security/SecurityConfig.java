@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.SessionMan
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -30,5 +32,10 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager provideAuthenticationManager(AuthenticationConfiguration ac) {
         return ac.getAuthenticationManager();
+    }
+
+    @Bean
+    PasswordEncoder providerPasswordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
