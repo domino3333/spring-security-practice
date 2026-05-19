@@ -24,7 +24,9 @@ public class SecurityConfig {
                 .formLogin(fl->fl.disable())
                 .httpBasic(hb->hb.disable())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
+                .authorizeHttpRequests(auth->auth
+                        .requestMatchers("/api/login").permitAll()
+                )
                 .build();
     }
 
