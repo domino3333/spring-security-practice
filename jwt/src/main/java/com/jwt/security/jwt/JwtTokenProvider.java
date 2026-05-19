@@ -60,7 +60,7 @@ public class JwtTokenProvider {
 
         String roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .filter(role->role.startsWith("ROLES"))
+                .filter(role->role.startsWith("ROLE_"))
                 .collect(Collectors.joining(","));
 
 
