@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         for (MemberRole role : list) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
         }
 
 
