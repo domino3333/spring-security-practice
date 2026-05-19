@@ -45,6 +45,14 @@ public class JwtTokenProvider {
         }
     }
 
+    public String getId(String token){
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
 
 
 
