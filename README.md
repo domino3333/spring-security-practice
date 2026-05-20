@@ -116,3 +116,83 @@ POST 요청이 오면 doPost()를 호출한다.
 기존에 존재하는 서블릿 필터 사이에 시큐리티 필터를 끼워넣는, 이 흐름에 유의하며 따라가야 한다.
 DelegatingFilterProxy는 톰캣 필터 세계와 spring bean 세계를 연결하는 프록시이다.
 
+
+
+# register security filter chain
+
+그렇다면 이제 실제 코드로 들어가서 시큐리티를 구현하는 방법을 알아보겠다.
+
+시큐리티 구현 방법에는 크게 세 가지가 있다.
+
+1. formLogin
+2. jwt
+3. Base64
+
+이를 이해하기 위해선
+또 하나의 그림이 필요하다
+security chain의 흐름도인데
+
+![alt text](images/security-flow.png.png)
+
+큰 흐름은 위와 같다.
+1,2,3 번 방식 모두 비슷한 흐름이지만 초반 과정에서 조금씩 차이가 있기 때문에
+차이가 있는 곳은 별도로 설명하겠다.
+
+
+* 자세한 코드 구현 방법은 공식문서나 이 리파지토리의 코드를 참고해주세요.
+먼저 security 관련 종속성을 추가해주면 실행 로그 창에 임시 비밀번호가 asfd-f23f-f23f2... 이런 식으로
+출력될 것이다.
+이러면 시큐리티가 잘 걸린 것이다.
+
+지금부터 우리가 해야 할 것은 이제 우리만의 "security filter chain" 을 서블릿 필터 체인 사이에 "끼워넣는" 것이다.
+
+그럼 어떻게 끼워넣냐
+사실 라이브러리를 등록한 것만으로 이미 끼워넣어진 것이다. spring security가 알아서 해줄 것이다.
+이제 SecurityFilterChain을 커스텀하여 작성하기만 하면 된다.
+
+
+1. formLogin 방식.
+
+@Configuration
+public class SecurityConfig {
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+
+        return http
+        
+                .formLogin(fr -> fr // formLogin 방식 안에 람다 형태로 함수들을 이어준다.
+                        .loginPage("/login") //로그인 창이 나오는 페이지
+                        .loginProcessingUrl("/loginProc") // jsp에서 action이 도달하는 url
+                        .defaultSuccessUrl("/main", true) // 로그인 성공 시 도달하는 페이지
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/loginProc").permitAll() 
+                        .requestMatchers("/main").permitAll()
+
+                )
+                .csrf(csrf -> csrf.disable())
+                .build();
+    }
+}
+
+
+formlogin방식은 주로 jsp(ssr) 방식에서 쓰인다.
+톰캣과 서블릿을 포함한 총 흐름은 이렇다.
+tomcat -> servlet filter chain -> delegatingFilterProxy -> "Spring Security Filter Chain"
+이 스프링 시큐리티 체인 안에서 다시
+
+![alt text](images/security-flow.png.png)
+
+이 이미지로 들어오는 것이다.
+
+"formLogin방식은 시큐리티가 제공하는 기본적인 로그인 흐름에 맞게 동작하며"
+
+기본적으로 AuthenticationFilter->UsernamePasswordAuthenticationToken(filter) -> AuthenticaitonManager
+-> AuthenticationProvider 까지 알아서 자동으로 해준다
+
+따라서 우리는 authmanager나 provider를 신경쓰지 않아도 된다.
+UserDetailsService와 UserDetails 구현체만 작성해주면 되는 것이다.
+
+
