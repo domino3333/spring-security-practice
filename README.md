@@ -97,4 +97,22 @@ POST 요청이 오면 doPost()를 호출한다.
 
 
 
-#
+# spring security filter chain
+
+위에서 요청 흐름을 알아보았는데 저 흐름에 우리가 사용하는 security chain을 등록하여 끼워 넣는 것이다.
+
+톰캣
+-> Servlet Filter Chain
+   -> DelegatingFilterProxy
+      -> Spring Security Filter Chain
+         -> SecurityContextHolderFilter
+         -> UsernamePasswordAuthenticationFilter
+         -> AuthorizationFilter
+         -> ...
+         -> ...
+-> DispatcherServlet
+-> Controller
+
+기존에 존재하는 서블릿 필터 사이에 시큐리티 필터를 끼워넣는, 이 흐름에 유의하며 따라가야 한다.
+DelegatingFilterProxy는 톰캣 필터 세계와 spring bean 세계를 연결하는 프록시이다.
+
