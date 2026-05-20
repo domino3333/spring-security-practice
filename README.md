@@ -132,7 +132,7 @@ DelegatingFilterProxy는 톰캣 필터 세계와 spring bean 세계를 연결하
 또 하나의 그림이 필요하다
 security chain의 흐름도인데
 
-![alt text](images/security-flow.png.png)
+![alt text](images/security-flow.png)
 
 큰 흐름은 위와 같다.
 1,2,3 번 방식 모두 비슷한 흐름이지만 초반 과정에서 조금씩 차이가 있기 때문에
@@ -151,7 +151,7 @@ security chain의 흐름도인데
 이제 SecurityFilterChain을 커스텀하여 작성하기만 하면 된다.
 
 
-1. formLogin 방식.
+1. formLogin 방식
 
 @Configuration
 public class SecurityConfig {
