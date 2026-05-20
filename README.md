@@ -195,4 +195,6 @@ tomcat -> servlet filter chain -> delegatingFilterProxy -> "Spring Security Filt
 따라서 우리는 authmanager나 provider를 신경쓰지 않아도 된다.
 UserDetailsService와 UserDetails 구현체만 작성해주면 되는 것이다.
 
+각자 체인의 역할을 설명하자면,
+
 
