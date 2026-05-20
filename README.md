@@ -185,7 +185,7 @@ tomcat -> servlet filter chain -> delegatingFilterProxy -> "Spring Security Filt
 
 ![alt text](images/security-flow.png)
 
-이 이미지로 들어오는 것이다.
+이 흐름으로 들어오는 것이다.
 
 "formLogin방식은 시큐리티가 제공하는 기본적인 로그인 흐름에 맞게 동작하며"
 
