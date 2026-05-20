@@ -183,7 +183,7 @@ formlogin방식은 주로 jsp(ssr) 방식에서 쓰인다.
 tomcat -> servlet filter chain -> delegatingFilterProxy -> "Spring Security Filter Chain"
 이 스프링 시큐리티 체인 안에서 다시
 
-![alt text](images/security-flow.png.png)
+![alt text](images/security-flow.png)
 
 이 이미지로 들어오는 것이다.
 
