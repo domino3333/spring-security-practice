@@ -201,3 +201,46 @@ formLogin에서는 로그인 처리 URL로 요청이 들어왔을 때
 UsernamePasswordAuthenticationFilter가 username/password를 꺼내
 UsernamePasswordAuthenticationToken을 만들고 AuthenticationManager에게 인증을 위임한다.
 
+AuthenticationManager 다시 token은 provider에게 넘긴다
+token을 받은 provider는 token에서 id를 뽑아 userDetailsService의 loadUserByUsername 함수를 호출한다
+여기서의 userDetailsService가 우리가 구현해야 하는 곳이다.
+
+
+@Override
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+
+        Member member = memberMapper.readMemberById(id);
+        List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
+
+        if(member == null){
+            //던지면 authenticationProvider가 받게 됨
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        List<MemberRole> memberRoleList = memberRoleMapper.readMemberRoleById(id);
+
+        for (MemberRole item : memberRoleList) {
+            //저장할 땐 ROLE_를 붙여서 UserDetails 구현체로 넣기
+            simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + item.getRoleName()));
+
+        }
+        return MyUser.builder()
+                .member(member)
+                .name(member.getName())
+                .id(member.getId())
+                .roles(simpleGrantedAuthorityList)
+                .password(member.getPassword()).build();
+    }
+
+이 함수를 호출하여 id를 조건으로 하여, DB에 존재하는 사용자 정보를 가져오고
+userDetails 의 구현체를 리턴해준다. 위 코드에 보이듯이 나는 MyUser 라는 클래스를 만들어서 구현했다.
+이 과정에서 프로바이더가 비밀번호를 대조해야 하기 때문에 passwordEncoder가 필요한데
+@Bean
+    BCryptPasswordEncoder createPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+SecurityConfig.java 에 위와 같이 구현해주면 스프링 빈에 등록이 되고 provider가 알아서 가져다 쓴다.
+
+이렇게 모든 인증 과정이 끝나고 나면
+세션에 "SPRING_SECURITY_CONTEXT" 라는 이름으로 인증정보가 저장된다.
+
