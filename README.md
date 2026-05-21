@@ -297,3 +297,28 @@ BCryptPasswordEncoder createPasswordEncoder() {
 
 JWT 방식에서는 보통 로그인 요청을 UsernamePasswordAuthenticationFilter가 가로채지 않고, 우리가 만든 Controller가 받는다.
 UsernamePasswordAuthenticationFilter를 거치긴 하지만 그곳에서 가로채어 뭔가 작업을 하지는 않는다는 뜻이다.
+
+다음 흐름은 로그인이 안 되어 있는 사용자의 로그인요청 흐름이다.
+
+POST /api/login
+-> Servlet Filter Chain
+-> Spring Security Filter Chain
+-> Controller
+-> AuthenticationManager
+-> JWT 발급
+
+직접 만든 컨트롤러에서 token을 만들어 내려준다.
+
+다음은 JWT를 들고 서버에 요청하는 흐름이다.
+
+GET /api/me
+Authorization: Bearer JWT
+
+-> Servlet Filter Chain
+-> Spring Security Filter Chain
+-> JwtAuthenticationFilter
+-> SecurityContextHolder 세팅
+-> Controller
+
+이때는 토큰을 검사해야 하기 때문에 security chain 안에 하나의 필터를 더 끼워넣는 것을 볼 수 있다.
+사용자가 가져온 토큰을 보고 유효성과 만료여부를 확인 후, 인증정보를 SecurityContextHolder에 세팅한다.
