@@ -309,6 +309,29 @@ POST /api/login
 
 직접 만든 컨트롤러에서 token을 만들어 내려준다.
 
+@PostMapping("/api/login")
+    public ResponseEntity<?> login(@RequestBody LoginDto dto) {
+
+        //로그인요청 때는 id/pw를 token으로 만듦
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(dto.getId(),dto.getPassword());
+
+        //인증 성공 시 authentication으로 돌려받고 이걸로 토큰을 만드는 것
+        //provider가 이 토큰에서 id를 뽑아 userDetailsService를 호출
+        Authentication authentication = authenticationManager.authenticate(token);
+        String jwt = jwtTokenProvider.createToken(authentication);
+
+
+
+        return ResponseEntity.ok(new LoginResponse(jwt));
+    }
+
+formLogin 방식에서 보았던 UsernamePasswordAuthenticationToken을 직접 컨트롤러에서 만들어 authenticaitonManager를 호출하는 것을 볼 수 있다.
+authenticaitonManager를 호출하면 내부적으로 provider가 호출되고 그 다음부터는 formlogin방식과 동일한 흐름으로 이어진다.
+(userDetails 구현체를 반환하는 userDetailsService의 loadby... 함수)
+jwt방식에서는 로그인 요청 시점에 SecurityContextHolder를 세팅하지 않아도 된다.
+왜냐하면 로그인 요청의 목적은 "이번 요청을 인증 상태로 계속 처리"하는 게 아니라 토큰 발급이기 때문이다.
+
+
 다음은 JWT를 들고 서버에 요청하는 흐름이다.
 
 GET /api/me
@@ -316,9 +339,36 @@ Authorization: Bearer JWT
 
 -> Servlet Filter Chain
 -> Spring Security Filter Chain
--> JwtAuthenticationFilter
+-> JwtAuthenticationFilter(토큰 검증)
 -> SecurityContextHolder 세팅
 -> Controller
 
 이때는 토큰을 검사해야 하기 때문에 security chain 안에 하나의 필터를 더 끼워넣는 것을 볼 수 있다.
 사용자가 가져온 토큰을 보고 유효성과 만료여부를 확인 후, 인증정보를 SecurityContextHolder에 세팅한다.
+
+@Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
+        String header = request.getHeader("Authorization");
+        if(header != null && header.startsWith("Bearer ")){
+            String token = header.substring(7);
+
+            if(jwtTokenProvider.validateToken(token)){
+                String id = jwtTokenProvider.getId(token);
+                MyUser myUser = (MyUser) myUserDetailsService.loadUserByUsername(id);
+
+                //로그인 요청 때는 인증 객체를 내가 직접 꽂아 넣어야 함
+                UsernamePasswordAuthenticationToken authenticationToken
+                        = new UsernamePasswordAuthenticationToken(myUser,null,myUser.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        }
+        filterChain.doFilter(request,response);
+    }
+
+위처럼 usernamepasswordauthenticationtoken을 직접 다시 만들고 SecurityContextHolder에 인증정보를 세팅해주는 것을 볼 수 있다.
+
