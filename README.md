@@ -292,3 +292,8 @@ BCryptPasswordEncoder createPasswordEncoder() {
 `SecurityConfig.java`에 위와 같이 구현해주면 스프링 빈에 등록이 되고, provider가 알아서 가져다 쓴다.
 
 이렇게 모든 인증 과정이 끝나고 나면 세션에 `"SPRING_SECURITY_CONTEXT"`라는 이름으로 인증정보가 저장된다.
+
+## 2. JWT 방식
+
+JWT 방식에서는 보통 로그인 요청을 UsernamePasswordAuthenticationFilter가 가로채지 않고, 우리가 만든 Controller가 받는다.
+UsernamePasswordAuthenticationFilter를 거치긴 하지만 그곳에서 가로채어 뭔가 작업을 하지는 않는다는 뜻이다.
