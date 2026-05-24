@@ -20,6 +20,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    // 하나의 필터로서 서블릿 필터 -> security filter chain 안에 있는
+    // UsernamePasswordAuthenticationFilter 앞에 꽂아넣을 핕터임
+
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
 
