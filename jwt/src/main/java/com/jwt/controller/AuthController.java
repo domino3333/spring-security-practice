@@ -32,7 +32,7 @@ public class AuthController {
         String jwt = jwtTokenProvider.createToken(authentication);
 
 
-
+        // 토큰을 내려줄 땐 dto로 내려주기
         return ResponseEntity.ok(new LoginResponse(jwt));
     }
 }
